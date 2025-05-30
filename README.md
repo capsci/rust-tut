@@ -1,3 +1,6 @@
+[Tutorial](https://doc.rust-lang.org/book/ch00-00-introduction.html) [GitHub](https://github.com/capsci/rust-tut)
+
+**Foreword**
 TBH, I wanted to start the day with [Zig](https://ziglang.org/); but after seeing a lot of promises about rust community and maturity; I decided to pursue Rust first.
 Besides with Linux kernel adopting Rust(i know it was controversial); I was more comfortable with placing by bet on Rust. Also, many developers I follow online transitioned to Zig via Rust and I don't mind following the same route and learn things along the way.
 That being said, lets begin.
@@ -73,8 +76,10 @@ In Rust, variables are immutable by default.
 
 # Common Programming Concepts
 ## Variables and Mutability
+
 - variables are immutable by default; add `mut` keyword to make them mutable.
 - constants are **always** immutable; and cannot be set to value thats computed at runtime.
+ 
 - **Shadowing** variables allow up to update their values :(
 	- we need `let` keyword to shadow a variable
 > [!Error] Why did Rust allow Shadowing? doesn't it defeat the usefulness of immutability
@@ -107,3 +112,56 @@ In Rust, variables are immutable by default.
 * arrays in Rust have fixed length
 	* **vector** is similar collection provided by standard library which is allowed to grow/shrink in size
 ## Functions
+* Rust uses snake_case as conventional style for function and variable names
+* `statements` are instructions that perform some actions and do not return a value
+* `expressions` evaluate to a resultant value
+	* expressions do end with a semicolon `;`
+## Control Flow
+### loop
+> [!Error] why not use `while` more efficiently instead of using `loop` ?
+- "designed" to retry operation which might fail
+- loop labels must begin with single quotes
+### while
+### for
+# Ownership
+Ownership enables Rust to make memory safety guarantees without needing garbage collector.
+In Rust, memory is managed through system of ownership with a set of rules that compiler checks.
+
+Data can be stored on a stack or heap.
+All data stored in stack must have known fixed size.
+Data with unknown size at compile time(or size that might change) should be stored in heap.
+Pushing on stack is faster than allocating on heap; since allocator does not need to find next available (big enough)space on the heap.
+Keeping track of parts of data which uses heap; minimizing duplicates and removing unused data are the problems that ownership addresses.
+
+**Ownership Rules**
+* Each value has an owner.
+* There can be only one owner at a time.
+* When owner goes out of scope, the value will be dropped.
+
+```rust
+let s1 = String::from("hello");
+let s2 = s1; // s1 is no longer accessible from this point on
+// when s1 goes out of scope; the memory is no longer freed (ps - s2 is using the same location)
+```
+Rust never creates *deep* copies of data; it simply moves.
+```rust
+let s1 = String::from("hello");
+let s2 = s1.clone(); // s1 remains accessible
+```
+
+```rust
+let x = 5;
+let y = x; // both x and y are accessible, since integers are known size during compilation and above assignments uses stack
+```
+
+Rust also allows transferring value without ownership, controlled using *references*.
+
+## References and Borrowing
+
+`&s` syntax creates a reference which refers to value of `s` but does not own it.
+Hence the value pointed by it does not drop when reference is stopped being used.
+
+References are immutable and we are not allowed to update its value
+## Slices
+
+> [!Info] String literals are stored as immutable slices
